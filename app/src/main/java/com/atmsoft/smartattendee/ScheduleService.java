@@ -7,10 +7,8 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
-
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -126,11 +124,11 @@ public class ScheduleService extends Service {
 
         Timer timerPunchIn = new Timer(true);
 
-        timerPunchIn.schedule(taskPunchIn, 30 * 1000, 30 * 1000);
+        timerPunchIn.schedule(taskPunchIn, 30 * 1000, 15 * 30 * 1000);
 
         Timer timerPunchOut = new Timer(true);
 
-        timerPunchOut.schedule(taskPunchOut, 45 * 1000, 60 * 1000);
+        timerPunchOut.schedule(taskPunchOut, 45 * 1000, 20 * 60 * 1000);
 
         keepDaemonService();
     }
