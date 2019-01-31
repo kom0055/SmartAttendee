@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SmartAttendee</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="btn_modify">Modify</string>
+    <string name="btn_punch_out">PunchOut</string>
+    <string name="btn_punch_in">PunchIn</string>
+    <string name="txt_ssid">Input Your SSId</string>
+</resources>
