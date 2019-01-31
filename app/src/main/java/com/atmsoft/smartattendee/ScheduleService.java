@@ -3,17 +3,16 @@ package com.atmsoft.smartattendee;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-
 import java.sql.Timestamp;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,15 +20,76 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 public class ScheduleService extends Service {
-    private WifiManager wifiManager = null;
+    private static WifiManager wifiManager = null;
     public static String TARGET_SSID = MainActivity.HW_SSID;
 
 
     private String TAG = getClass().getName();
+    private static String TaskTag = "TaskTag";
 
     private String Process_Name = "com.atmsoft.smartattendee.DaemonService:serviceDaemon";
-    private Timestamp left = new Timestamp(119, 1, 3, 22, 00, 00, 00);
-    private Timestamp right = new Timestamp(119, 1, 11, 6, 00, 00, 00);
+    private Timestamp left = new Timestamp(119, 1, 3, 22, 0, 0, 0);
+    private Timestamp right = new Timestamp(119, 1, 11, 6, 0, 0, 0);
+    private static PunchInStatus status = PunchInStatus.NEVER;
+    private static TimerTask taskPunchIn = new TimerTask() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        public void run() {
+            Log.d(TaskTag, "Timer Connect Wifi ");
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+//                if (now.after(left) && now.before(right)) {
+//                    return;
+//                }
+            Log.d(TaskTag, "getTimeNow: " + new java.sql.Timestamp(System.currentTimeMillis()).toString());
+
+            String time = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
+            Log.d(TaskTag, "now time: " + time);
+            if (null == time || "".equals(time)) {
+                return;
+            }
+            int timeInt = Integer.parseInt(time);
+            Log.d(TaskTag, "timeInt: " + timeInt);
+
+
+            switch (status) {
+
+                case PUNCH_IN:
+                    if (timeInt < 18) {
+                        return;
+                    }
+                    if (Utils.SendPunch(wifiManager, TARGET_SSID)) {
+                        status = PunchInStatus.PUNCH_OUT;
+                    }
+                case PUNCH_OUT:
+                    if (timeInt < 7) {
+                        return;
+                    }
+
+                    status = PunchInStatus.NEVER;
+
+                    return;
+                case NEVER:
+                default:
+                    if (Utils.SendPunch(wifiManager, TARGET_SSID)) {
+                        status = PunchInStatus.PUNCH_IN;
+                    }
+                    return;
+
+            }
+
+
+        }
+    };
+
+
+    static {
+        Timer timerPunchIn = new Timer(true);
+
+        timerPunchIn.schedule(taskPunchIn, 10 * 1000, 60 * 1000);
+
+
+    }
+
     private StrongService startDaemonService = new StrongService.Stub() {
         @Override
         public void startService() {
@@ -54,7 +114,7 @@ public class ScheduleService extends Service {
                 startDaemonService.startService();
                 Log.d(TAG, "Restart daemon: ");
             } catch (Exception e) {
-
+                Log.e(TAG, "error " + e.getMessage());
             }
         }
     }
@@ -81,57 +141,6 @@ public class ScheduleService extends Service {
         super.onCreate();
         wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Toast.makeText(ScheduleService.this, "Schedule onCreate...", Toast.LENGTH_SHORT).show();
-        TimerTask taskPunchIn = new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG, "Timer Connect Wifi ");
-                Timestamp now = new Timestamp(System.currentTimeMillis());
-                if (now.after(left) && now.before(right)) {
-                    return;
-                }
-                Log.d(TAG, "getTimeNow: " + new java.sql.Timestamp(System.currentTimeMillis()).toString());
-                wifiManager.setWifiEnabled(true);
-                List<WifiConfiguration> wifiConfigurations = wifiManager.getConfiguredNetworks();
-                if (null == wifiConfigurations || 0 == wifiConfigurations.size()) {
-                    return;
-                }
-                WifiConfiguration configuration = null;
-                if (1 == wifiConfigurations.size()) {
-                    configuration = wifiConfigurations.get(0);
-                } else {
-                    configuration = wifiConfigurations.stream().filter(p -> {
-                        if (null == p || null == p.SSID) {
-                            return false;
-                        }
-                        return TARGET_SSID.equals(p.SSID);
-                    }).findFirst().orElse(null);
-                }
-
-
-                if (null == configuration) {
-
-                    return;
-                }
-                wifiManager.enableNetwork(configuration.networkId, true);
-            }
-        };
-
-        TimerTask taskPunchOut = new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG, "Timer Disconnect Wifi ");
-                wifiManager.setWifiEnabled(false);
-            }
-        };
-
-        Timer timerPunchIn = new Timer(true);
-
-        timerPunchIn.schedule(taskPunchIn, 30 * 1000, 30 * 1000);
-
-        Timer timerPunchOut = new Timer(true);
-
-        timerPunchOut.schedule(taskPunchOut, 45 * 1000, 60 * 1000);
-
         keepDaemonService();
     }
 
