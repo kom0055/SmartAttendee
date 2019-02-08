@@ -11,7 +11,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,8 +29,8 @@ public class ScheduleService extends Service {
     private String TAG = getClass().getName();
 
     private String Process_Name = "com.atmsoft.smartattendee.DaemonService:serviceDaemon";
-    private Timestamp left = new Timestamp(119, 1, 3, 22, 00, 00, 00);
-    private Timestamp right = new Timestamp(119, 1, 11, 6, 00, 00, 00);
+    private Timestamp left = new Timestamp(119, 1, 3, 22, 0, 0, 0);
+    private Timestamp right = new Timestamp(119, 1, 11, 6, 0, 0, 0);
     private StrongService startDaemonService = new StrongService.Stub() {
         @Override
         public void startService() {
@@ -52,7 +55,7 @@ public class ScheduleService extends Service {
                 startDaemonService.startService();
                 Log.d(TAG, "Restart daemon: ");
             } catch (Exception e) {
-
+                Log.e(TAG, "error " + e.getMessage());
             }
         }
     }
@@ -88,12 +91,25 @@ public class ScheduleService extends Service {
                     return;
                 }
                 Log.d(TAG, "getTimeNow: " + new java.sql.Timestamp(System.currentTimeMillis()).toString());
+
+                String time = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
+
+                Log.d(TAG, "now time: " + time);
+                if (null == time || "".equals(time)) {
+                    return;
+                }
+                int timeInt = Integer.parseInt(time);
+                Log.d(TAG, "timeInt: " + timeInt);
+                if (timeInt < 7 || timeInt > 22) {
+                    return;
+                }
+
                 wifiManager.setWifiEnabled(true);
                 List<WifiConfiguration> wifiConfigurations = wifiManager.getConfiguredNetworks();
                 if (null == wifiConfigurations || 0 == wifiConfigurations.size()) {
                     return;
                 }
-                WifiConfiguration configuration = null;
+                WifiConfiguration configuration;
                 if (1 == wifiConfigurations.size()) {
                     configuration = wifiConfigurations.get(0);
                 } else {
@@ -124,11 +140,11 @@ public class ScheduleService extends Service {
 
         Timer timerPunchIn = new Timer(true);
 
-        timerPunchIn.schedule(taskPunchIn, 30 * 1000, 15 * 30 * 1000);
+        timerPunchIn.schedule(taskPunchIn, 30 * 1000, 60 * 1000);
 
         Timer timerPunchOut = new Timer(true);
 
-        timerPunchOut.schedule(taskPunchOut, 45 * 1000, 20 * 60 * 1000);
+        timerPunchOut.schedule(taskPunchOut, 45 * 1000, 6 * 60 * 1000);
 
         keepDaemonService();
     }
