@@ -8,52 +8,14 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/btnPunchIn"
+        android:id="@+id/btnPunch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/btn_punch_in"
-        app:layout_constraintEnd_toStartOf="@+id/btnPunchOut"
-        app:layout_constraintTop_toBottomOf="@+id/txtSSId" />
-
-    <Button
-        android:id="@+id/btnPunchOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="102dp"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
-        android:text="@string/btn_punch_out"
-        app:layout_constraintEnd_toEndOf="@+id/txtSSId"
+        android:layout_marginStart="149dp"
+        android:layout_marginLeft="149dp"
+        android:layout_marginTop="117dp"
+        android:text="Punch"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btnModify"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="@string/btn_modify"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btnPunchIn"
-        app:layout_constraintEnd_toStartOf="@+id/btnPunchIn" />
-
-    <EditText
-        android:id="@+id/txtSSId"
-        android:layout_width="0dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="@string/txt_ssid"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnPunchOut"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
