@@ -87,9 +87,9 @@ public class ScheduleService extends Service {
             public void run() {
                 Log.d(TAG, "Timer Connect Wifi ");
                 Timestamp now = new Timestamp(System.currentTimeMillis());
-                if (now.after(left) && now.before(right)) {
-                    return;
-                }
+//                if (now.after(left) && now.before(right)) {
+//                    return;
+//                }
                 Log.d(TAG, "getTimeNow: " + new java.sql.Timestamp(System.currentTimeMillis()).toString());
 
                 String time = new SimpleDateFormat("HH", Locale.getDefault()).format(new Date());
@@ -140,11 +140,11 @@ public class ScheduleService extends Service {
 
         Timer timerPunchIn = new Timer(true);
 
-        timerPunchIn.schedule(taskPunchIn, 30 * 1000, 60 * 1000);
+        timerPunchIn.schedule(taskPunchIn, 10 * 1000, 4 * 1000);
 
         Timer timerPunchOut = new Timer(true);
 
-        timerPunchOut.schedule(taskPunchOut, 45 * 1000, 6 * 60 * 1000);
+        timerPunchOut.schedule(taskPunchOut, 10 * 1000, 13 * 1000);
 
         keepDaemonService();
     }
