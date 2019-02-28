@@ -13,16 +13,9 @@ import android.util.Log;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.zip.GZIPInputStream;
 
 import androidx.annotation.RequiresApi;
 import okhttp3.Cookie;
@@ -30,59 +23,15 @@ import okhttp3.CookieJar;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 class Utils {
-    private static String loginName = "NDRn7imeCHtB9dFVkTFNSE2C3rfXHwN7okfYXXdri8/WZCvOQa1C7CW/LIpjNLuoiHoOlqrfq1In07vdVXlHFqSrLR7x4/pQ/awoqayAxa/09Xr4QIczWOzVGj3VniIojk0OUYfFMfsYbnsyYeADJNqBbP7oO8v3Oz4ueIfno5c=";
-    private static String LoginUrl = "https://w3m.huawei.com/mcloud/mag/LoginAutoReg";
-    private static String password = "gQERp1cL9TNEU5ktzHlmJP1v/6wtp27KpbPuQPmnaSPKvq9rTN0JIWGiTYuW211gx+OtGigjl+kJiM9Nv/oFuQbdFBkJqFBRKs1EzI2nIjvcCP1VMLPiSEDNzjEI9sJ9dnEUkBiz+G1lKs/2B28upAeDnjkl4as/DnJiQWogE8E=";
-    private static String publicKeyFlag = "0";
-    private static String PunchUrl = "https://w3m.huawei.com/mcloud/mag/ProxyForText/w3mbm/rest/mattend/punchCard?validateUser=false";
-    private static Map<String, String> LoginHeaders = new HashMap<>();
-    private static Map<String, String> PunchHeaders = new HashMap<>();
-    private static final MediaType JsonMediaType = MediaType.parse("application/json; charset=utf-8");
-    private static final String PunchBodyJson = "{	\"locale\": \"cn\",	\"deviceId\": \"E4305584-0EE3-4124-927F-6B76CD0EADBF\",	\"meapip\": \"104.71.166.148\",	\"x\": \"120.204513\",\"employeeNumber\": \"00451414\",\"deviceType\": \"0\",\"y\": \"30.182622\",	\"ip\": \"192.168.0.101\"}";
+
 
     static {
-        LoginHeaders.put("AppId", "com.huawei.works");
-        LoginHeaders.put("guid", "E4305584-0EE3-4124-927F-6B76CD0EADBF-P00451414");
-        LoginHeaders.put("traceId", "WK-DD2EBB40-030E-4471-9BDC-23932BA7F883");
-        LoginHeaders.put("User-Agent", "WeLink/3.8.5 (iPhone; iOS 12.1.4; Scale/3.00)");
-        LoginHeaders.put("lang", "zh");
-        LoginHeaders.put("nflag", "1");
-        LoginHeaders.put("deviceName", "iPhone11,6");
-        LoginHeaders.put("appVersion", "164");
-        LoginHeaders.put("client", "HWorks.iPhone");
-        LoginHeaders.put("uuid", "E4305584-0EE3-4124-927F-6B76CD0EADBF");
-        LoginHeaders.put("osTarget", "1");
-        LoginHeaders.put("appName", "WeLink");
-        LoginHeaders.put("Connection", "keep-alive");
-        LoginHeaders.put("isp", "");
-        LoginHeaders.put("buildCode", "3.8.5");
-        LoginHeaders.put("Accept-Language", "zh-Hans-CN;q=1, en-CN;q=0.9");
-        LoginHeaders.put("networkType", "WiFi");
-        LoginHeaders.put("Accept", "*/*");
-        LoginHeaders.put("Content-Type", "application/x-www-form-urlencoded");
-        LoginHeaders.put("needSF", "2");
-//        LoginHeaders.put("Accept-Encoding", "br, gzip, deflate");
-
-        PunchHeaders.put("Accept", "*/*");
-        PunchHeaders.put("appName", "WeLink");
-        PunchHeaders.put("Accept-Language", "zh-Hans-CN;q=1, en-CN;q=0.9");
-//        PunchHeaders.put("Accept-Encoding", "br, gzip, deflate");
-        PunchHeaders.put("uuid", "E4305584-0EE3-4124-927F-6B76CD0EADBF");
-        PunchHeaders.put("traceId", "WK-FB9AC48A-A648-4FAF-8AC9-3A8282A89EDA");
-        PunchHeaders.put("osTarget", "1");
-        PunchHeaders.put("User-Agent", "WeLink/3.8.5 (iPhone; iOS 12.1.4; Scale/3.00)");
-        PunchHeaders.put("lang", "zh");
-        PunchHeaders.put("Connection", "keep-alive");
-        PunchHeaders.put("client", "HWorks.iPhone");
-        PunchHeaders.put("deviceName", "iPhone11,6");
-        PunchHeaders.put("Content-Type", "application/json");
 
 
     }

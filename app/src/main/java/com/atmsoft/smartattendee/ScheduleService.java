@@ -60,6 +60,7 @@ public class ScheduleService extends Service {
                     if (Utils.SendPunch(wifiManager, TARGET_SSID)) {
                         status = PunchInStatus.PUNCH_OUT;
                     }
+                    return;
                 case PUNCH_OUT:
                     if (timeInt < 7) {
                         return;
