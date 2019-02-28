@@ -62,11 +62,10 @@ public class ScheduleService extends Service {
                     }
                     return;
                 case PUNCH_OUT:
-                    if (timeInt < 7) {
+                    if (timeInt == 7) {
+                        status = PunchInStatus.NEVER;
                         return;
                     }
-
-                    status = PunchInStatus.NEVER;
 
                     return;
                 case NEVER:
